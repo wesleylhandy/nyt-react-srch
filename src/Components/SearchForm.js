@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import { FormGroup, FormControl, ControlLabel, Button, Collapse } from 'react-bootstrap';
+import { FormGroup, FormControl, ControlLabel, Glyphicon, Button, Collapse } from 'react-bootstrap';
 
 export default class SearchForm extends Component {
 	constructor(props) {
 		super(props);
-		
+		this.reset = this.reset.bind(this)
 		this.state = {
 			searchTerms: '',
 			startYear: undefined,
@@ -20,6 +20,13 @@ export default class SearchForm extends Component {
 		this.setState({currentYear});
 	}
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({open: nextProps.open});
+    if(!nextProps.open) {
+      this.reset(null);
+    }
+  }
+
 	toggleExpand(e) {
 		e.preventDefault();
 		this.setState({open: !this.state.open});
@@ -32,9 +39,23 @@ export default class SearchForm extends Component {
 	handleStartYearChange(e){
 		this.setState({startYear: e.target.value});
 	}
+
+	handleEndYearChange(e){
+		this.setState({endYear: e.target.value});
+	}
 	
 	handleSubmit(e) {
 		e.preventDefault();
+		const searchTerms = this.state.searchTerms.trim().replace(' ', "+");
+
+		const startDate = this.state.startYear >= 1851 && this.state.startYear <= this.state.currentYear ? `&begin_date=${this.state.startYear}0101` : '';
+
+		const endDate = this.state.endYear <= 2017 && this.state.endYear >= 1851 ? `&end_date=${this.state.endYear}1231` : '';
+
+		const queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchTerms}&fq=source:(The+New+York+Times)&api-key=${process.env.NYT_API || '4bbabbfc37dd4786914ca930e35dd905'}${startDate}${endDate}`;
+		
+    this.props.callFetch(queryURL);
+		
 	}
 
 	handleSelect(e) {
@@ -42,7 +63,6 @@ export default class SearchForm extends Component {
 	}
 
 	reset(e) {
-		console.log(e);
 		this.setState({searchTerms: '', startYear: undefined, endYear: undefined, numRecords: 10});
 	}
 
@@ -51,12 +71,13 @@ export default class SearchForm extends Component {
 		return (
 			<div className="panel panel-primary searchDisplay">
         <div className="panel-heading">
-        	<span className="glyphicon glyphicon-list-alt"></span>&nbsp;Search Parameters
+        	<div className='clearfix'>
+            <span className='pull-left'><Glyphicon glyph='list-alt'/>&nbsp;Search Parameters</span>
 
-        	<Button className='pull-right' bsStyle='default' bsSize='xsmall' onClick={this.toggleExpand.bind(this)}>
-        		<i className="fa fa-arrows-v" aria-hidden="true"></i>
-        	</Button>
-
+          	<Button className='pull-right' bsStyle='default' bsSize='xsmall' onClick={this.toggleExpand.bind(this)}>
+          		<i className="fa fa-arrows-v" aria-hidden="true"></i>
+          	</Button>
+          </div>
         </div>
 
         <Collapse in={this.state.open}>
@@ -65,7 +86,7 @@ export default class SearchForm extends Component {
           	<form onSubmit={this.handleSubmit.bind(this)}>
 
               <FormGroup>
-                <ControlLabel>Search Term:</ControlLabel>
+                <ControlLabel className='pull-left'>Search Term:</ControlLabel>
                 <FormControl
                 	type="text" 
                 	placeholder="Anything" 
@@ -75,7 +96,7 @@ export default class SearchForm extends Component {
               </FormGroup>
         
               <FormGroup controlId="formControlsSelect">
-                <ControlLabel>Number of Records to Retrieve</ControlLabel>
+                <ControlLabel className='pull-left'>Number of Records to Retrieve</ControlLabel>
                 <FormControl componentClass="select" onChange={this.handleSelect.bind(this)}>
                   <option>10</option>
                   <option>5</option>
@@ -84,7 +105,7 @@ export default class SearchForm extends Component {
               </FormGroup>
 
               <FormGroup>
-                <ControlLabel>Start Year (Optional):</ControlLabel>
+                <ControlLabel className='pull-left'>Start Year (Optional):</ControlLabel>
                 <FormControl 
                 	type="number" 
                 	min="1851" 
@@ -96,21 +117,23 @@ export default class SearchForm extends Component {
               </FormGroup>
               
               <FormGroup>
-                <ControlLabel>End Year (Optional):</ControlLabel>
+                <ControlLabel className='pull-left'>End Year (Optional):</ControlLabel>
                 <FormControl 
                 	type="number" 
                 	min="1851" 
                 	max={this.state.currentYear} 
                 	placeholder={this.state.currentYear}
-                	value={this.state.endYear}/>
+                	value={this.state.endYear}
+                	onChange={this.handleEndYearChange.bind(this)}
+                />
               </FormGroup>
           
-              <Button type="submit" className='search-btn'>
+              <Button type="submit" className='pull-left'>
               	<span className="glyphicon glyphicon-search"></span>
               	&nbsp;Search
               </Button>
               
-              <Button	type="reset" className="reset-btn" onClick={this.reset.bind(this)}>
+              <Button	type="reset" className="pull-left" onClick={this.reset}>
               	<span className="glyphicon glyphicon-trash"></span>
               	&nbsp;Clear
               </Button>
