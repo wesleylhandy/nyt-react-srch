@@ -4,6 +4,7 @@ import './App.css';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import SearchForm from './Components/SearchForm';
+import SearchResults from './Components/SearchResults';
 
 class App extends Component {
 	constructor(props) {
@@ -29,6 +30,8 @@ class App extends Component {
         <Header/>
 
         <SearchForm open={this.state.formOpen} callFetch={this.getArticles.bind(this)}/>
+
+        <SearchResults open={this.state.resultsOpen} articles={this.state.articles}/>
 
         <Footer/>
 

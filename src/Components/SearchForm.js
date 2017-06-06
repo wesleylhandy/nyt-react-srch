@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { FormGroup, FormControl, ControlLabel, Glyphicon, Button, Collapse } from 'react-bootstrap';
 
+import PanelHeading from './PanelHeading';
+
 export default class SearchForm extends Component {
 	constructor(props) {
 		super(props);
@@ -28,7 +30,6 @@ export default class SearchForm extends Component {
   }
 
 	toggleExpand(e) {
-		e.preventDefault();
 		this.setState({open: !this.state.open});
 	}
 
@@ -70,16 +71,9 @@ export default class SearchForm extends Component {
 		
 		return (
 			<div className="panel panel-primary searchDisplay">
-        <div className="panel-heading">
-        	<div className='clearfix'>
-            <span className='pull-left'><Glyphicon glyph='list-alt'/>&nbsp;Search Parameters</span>
 
-          	<Button className='pull-right' bsStyle='default' bsSize='xsmall' onClick={this.toggleExpand.bind(this)}>
-          		<i className="fa fa-arrows-v" aria-hidden="true"></i>
-          	</Button>
-          </div>
-        </div>
-
+        <PanelHeading toggle={this.toggleExpand.bind(this)} glyph='list-alt' title='Search Parameters'/>
+        
         <Collapse in={this.state.open}>
         	<div className="panel-body">
 
@@ -129,13 +123,11 @@ export default class SearchForm extends Component {
               </FormGroup>
           
               <Button type="submit" className='pull-left'>
-              	<span className="glyphicon glyphicon-search"></span>
-              	&nbsp;Search
+              	<Glyphicon glyph='search'>&nbsp;Search</Glyphicon>              	
               </Button>
               
               <Button	type="reset" className="pull-left" onClick={this.reset}>
-              	<span className="glyphicon glyphicon-trash"></span>
-              	&nbsp;Clear
+              	<Glyphicon glyph='trash'>&nbsp;Clear</Glyphicon>
               </Button>
             
             </form>
