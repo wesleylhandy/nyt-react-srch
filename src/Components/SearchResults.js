@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Image, Media } from 'react-bootstrap';
-import { FlipMove } from 'react-flip-move';
-import { moment } from 'moment';
+import FlipMove from 'react-flip-move';
+import moment from 'moment';
 
 import PanelHeading from './PanelHeading';
 
@@ -10,12 +10,14 @@ export default class SearchResults extends Component {
 	constructor(props) {
 		super(props);
 		this.state={
-			open: false
+			open: false,
+			articles: []
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
-    this.setState({open: nextProps.open});
+		console.log(nextProps);
+    this.setState({open: nextProps.open, articles: [...nextProps.articles]});
   }
 
   toggleExpand() {
@@ -23,13 +25,12 @@ export default class SearchResults extends Component {
 	}
 
 	renderResultsList() {
-
-		if(this.props.articles.length > 0) {
+		console.log('render results', JSON.stringify(this.state.articles, null, 2))
+		if(this.state.articles.length > 0) {
 			return (
 			<FlipMove duration={250} easing='ease-in' maintainContainerHeight={true}>
 				<Media.List>
-					{()=> {
-						return this.props.articles.map((article, i)=> {
+					{this.state.articles.map((article, i)=> {
 							const multimedia = article.multimedia;
 							const index = multimedia.findIndex(e => e.subtype==='thumbnail');
 							let imgSrc;
@@ -55,7 +56,7 @@ export default class SearchResults extends Component {
 								</Media.ListItem>
 							)
 						})
-					}}
+					}
 				</Media.List>
 			</FlipMove>
 		)} else {
@@ -77,7 +78,7 @@ export default class SearchResults extends Component {
 				<PanelHeading toggle={this.toggleExpand.bind(this)} glyph='calendar' title='Top Articles'/>
         <Collapse in={this.state.open}>
         	<div className="panel-body">
-        		{this.renderResultsList}
+        		{this.renderResultsList()}
         	</div>
         </Collapse>
     	</div>
