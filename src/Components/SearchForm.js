@@ -51,7 +51,7 @@ export default class SearchForm extends Component {
 
 		const startDate = this.state.startYear >= 1851 && this.state.startYear <= this.state.currentYear ? `&begin_date=${this.state.startYear}0101` : '';
 
-		const endDate = this.state.endYear <= 2017 && this.state.endYear >= 1851 ? `&end_date=${this.state.endYear}1231` : '';
+		const endDate = this.state.endYear <= this.state.currentYear && this.state.endYear >= 1851 ? `&end_date=${this.state.endYear}1231` : '';
 
 		const queryURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchTerms}&fq=source:(The+New+York+Times)&api-key=${process.env.NYT_API || '4bbabbfc37dd4786914ca930e35dd905'}${startDate}${endDate}`;
 		
@@ -70,7 +70,7 @@ export default class SearchForm extends Component {
 	render() {
 		
 		return (
-			<div className="panel panel-primary searchDisplay">
+			<div className="panel panel-primary">
 
         <PanelHeading toggle={this.toggleExpand.bind(this)} glyph='list-alt' title='Search Parameters'/>
         
