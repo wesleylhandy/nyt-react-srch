@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Image, Media } from 'react-bootstrap';
-import FlipMove from 'react-flip-move';
-import Moment from 'moment';
+import { FlipMove } from 'react-flip-move';
+import { moment } from 'moment';
 
 import PanelHeading from './PanelHeading';
 
@@ -23,35 +23,50 @@ export default class SearchResults extends Component {
 	}
 
 	renderResultsList() {
-			
-			if(this.props.articles.length > 0) {
-				return (
-				<FlipMove duration={250} easing='ease-in' maintainContainerHeight={true}>
-					<Media.List>
-						{()=> this.props.articles.map((article, index)=> (
-							<Media.ListItem key='index'>
-								<Media.Left>
-									<a href={article.web_url} target="_blank">
-										<Image src={article.multimedia.findIndex(e=>e.subtype==='thumbnail') ?
-											`https://www.nytimes.com/${article.multimedia.find((e, i, a)=> e.subtype==='thumbnail' ? a[i].url)}` : 'https://placehold.it/75x75?text=No+Image'
-										} alt={`Image for ${article.headline.main}`} height='75' width='75'/>
-									</a>
-								</Media.Left>
-								<Media.Body>
-									<Media.Heading>
-										<a href={article.web_url} target='_blank'>{article.headline.main}</a>
-									</Media.Heading>
-									<p>{article.snippet}</p>
-									<p>{moment(article.pubdate).format('LLLL')}</p>
-								</Media.Body>
-							</Media.ListItem>
 
+		if(this.props.articles.length > 0) {
+			return (
+			<FlipMove duration={250} easing='ease-in' maintainContainerHeight={true}>
+				<Media.List>
+					{()=> {
+						return this.props.articles.map((article, i)=> {
+							const multimedia = article.multimedia;
+							const index = multimedia.findIndex(e => e.subtype==='thumbnail');
+							let imgSrc;
+							if (index === -1) {
+								imgSrc = 'https://placehold.it/75x75?text=No+Image';
+							} else {
+								imgSrc = `https://www.nytimes.com/${multimedia[index].url}`;
+							}
+							return (
+								<Media.ListItem key={i}>
+									<Media.Left>
+										<a href={article.web_url} target="_blank">
+											<Image src={imgSrc} alt={`Image for ${article.headline.main}`} height='75' width='75'/>
+										</a>
+									</Media.Left>
+									<Media.Body>
+										<Media.Heading>
+											<a href={article.web_url} target='_blank'>{article.headline.main}</a>
+										</Media.Heading>
+										<p>{article.snippet}</p>
+										<p>{moment(article.pubdate).format('LLLL')}</p>
+									</Media.Body>
+								</Media.ListItem>
 							)
-						)}
-						</Media.List>
-				</FlipMove>
-			}
-		)
+						})
+					}}
+				</Media.List>
+			</FlipMove>
+		)} else {
+				return (
+					<Media>
+						<Media.Body>
+							<p><em>Please search for another term for better results.</em></p>
+						</Media.Body>
+					</Media>
+				)
+		}
 	}
 
 	render() {
