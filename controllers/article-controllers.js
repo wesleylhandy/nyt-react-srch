@@ -20,12 +20,14 @@ routes.post("/api/article", (req, res) => {
         snippet: body.snippet
     });
 
-    article.save({runValidators: true},(article) => {
-        res.send(article);
-    }, (e) => {
-        console.error(e.message);
-        let statusCode = e.message.includes('notUnique') ? 404 : 503;
-        res.status(statusCode).send(e.message);
+    article.save({runValidators: true})
+        .then(article => res.send(article))
+        .catch(err=> {
+            if (err) {
+                console.error(err.message);
+                let statusCode = err.message.includes('notUnique') ? 404 : 503;
+                res.status(statusCode).send(err.message);
+            }
     });
 });
 
