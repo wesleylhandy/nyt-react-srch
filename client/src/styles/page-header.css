@@ -1,0 +1,11 @@
+.page-header {
+	background-color: white;
+	text-align: center;
+	margin: 20px 0;
+	border-top: 4px solid black;
+	border-bottom: 4px solid black;
+}
+
+.page-header__badge {
+	margin-top: 50px;
+}

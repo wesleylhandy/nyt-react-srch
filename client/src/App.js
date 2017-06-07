@@ -21,16 +21,22 @@ class App extends Component {
 			.then(data => this.setState({formOpen: false, resultsOpen: true, articles:[...data.response.docs]}));
 	}
 
-
   render() {
     return (
       <div className="App">
 
-        <Header/>
+        <div className="container">
 
-        <SearchForm open={this.state.formOpen} callFetch={this.getArticles.bind(this)}/>
+        	<Header/>
 
-        <SearchResults open={this.state.resultsOpen} articles={this.state.articles}/>
+	        <SearchForm open={this.state.formOpen} callFetch={this.getArticles.bind(this)}/>
+
+	        <SearchResults 
+	        	open={this.state.resultsOpen} 
+	        	articles={this.state.articles} 
+	        />
+
+	      </div>
 
         <Footer/>
 
