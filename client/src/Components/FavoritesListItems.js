@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Media, Image, Button } from 'react-bootstrap';
+import { Media, Image, Button, Badge } from 'react-bootstrap';
 import FlipMove from 'react-flip-move';
 import moment from 'moment';
 
-import helpers from '../utils/helpers'; 
+import helpers from '../utils/helpers';
+import '../styles/fav-list-item-buttons.css' 
 
 //client side socket connection
 import io from 'socket.io-client'; 
@@ -16,6 +17,7 @@ export default class FavoritesListItems extends Component {
 		this.state = {
 			articles: []
 		}
+		this.incrementVotes = this.incrementVotes.bind(this);
 	}
 
 	componentWillMount() {
@@ -50,6 +52,26 @@ export default class FavoritesListItems extends Component {
 		});
 	}
 
+	incrementVotes(_id, count){
+		helpers.incrementVotes({_id, count})
+		.then(response => {
+			console.log(response.data);
+		}).catch(err=>{
+			if(err) {
+				console.error(err);
+				//this is a great place to show an error on screen
+			}
+		});
+	}
+
+	upVote(_id) {
+		this.incrementVotes(_id, 1);
+	}
+
+	downVote(_id) {
+		this.incrementVotes(_id, -1);
+	}
+
 	render() {
 		if(this.state.articles.length > 0 ) {
 			return (			
@@ -77,10 +99,29 @@ export default class FavoritesListItems extends Component {
 											<p>{moment(article.pub_date).format('LLLL')}</p>
 										</Media.Body>
 										<Media.Right>
+											<div className='button-list'>
 
-											<Button bsStyle='primary' onClick={function() {this.toggleDelete(article._id, index)}.bind(this)}>
-												{deleted}
-											</Button>
+												<div className='button-list--left'>											
+												
+													<Button  bsStyle='default' bsSize='xsmall' onClick={()=>this.upVote(article._id).bind(this)}>
+														<i className="fa fa-chevron-up"></i>
+													</Button>
+
+													<Badge className='button-list__button--middle'>{article.likes}</Badge>
+
+													<Button bsStyle='default' bsSize='xsmall' onClick={()=>this.downVote(article._id).bind(this)}>
+															<i className="fa fa-chevron-down"></i>
+													</Button>
+												</div>
+
+												<div className='button-list--right'>
+
+													<Button bsStyle='primary' onClick={function() {this.toggleDelete(article._id, index)}.bind(this)}>
+															{deleted}
+													</Button>
+												</div>
+
+											</div>
 	
 										</Media.Right>
 										<hr/>

@@ -26,7 +26,7 @@ export default class FavoritesList extends Component {
 
 		return (
 
-			<div className="panel panel-primary">
+			<div className="panel panel-default">
 				<PanelHeading toggle={this.toggleExpand.bind(this)} glyph='fire' title='Saved Articles'/>
         <Collapse in={this.state.open}>
         	<div className="panel-body">

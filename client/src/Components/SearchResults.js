@@ -26,8 +26,8 @@ export default class SearchResults extends Component {
 
 		return (
 
-			<div className="panel panel-primary">
-				<PanelHeading toggle={this.toggleExpand.bind(this)} glyph='calendar' title='Search Results'/>
+			<div className="panel panel-default">
+				<PanelHeading toggle={this.toggleExpand.bind(this)} glyph='list-alt' title='Search Results'/>
         <Collapse in={this.state.open}>
         	<div className="panel-body">
         		<ResultsListItems articles={this.state.articles}/>

@@ -1,0 +1,27 @@
+.button-list {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.button-list__button--middle {
+	margin: 16px 0;
+}
+
+.button-list--left {
+	float: left;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	border-right: 1px solid black;
+	padding: 0 30px;
+}
+
+.button-list--right {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	float: right;
+	padding: 0 0 0 30px;
+}

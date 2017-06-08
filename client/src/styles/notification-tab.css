@@ -1,0 +1,9 @@
+.notification-tab {
+	position: fixed;
+	right: 0;
+	top: 5%;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border: 1px solid black;
+	width: 5px;
+}

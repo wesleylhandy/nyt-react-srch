@@ -23,7 +23,7 @@ class App extends Component {
 			favoriteArticles: [],
 			newArticle: {}
 		}
-		socket.on('new-save', payload => this.updateSavedArticles(payload));
+		socket.on('new-save', () => this.getSavedArticles());
 		this.getSavedArticles = this.getSavedArticles.bind(this);
 	}
 
@@ -42,11 +42,6 @@ class App extends Component {
 			}
 		});
 	}
-
-	updateSavedArticles(payload) {
-    this.setState({newArticle: payload.article});
-    this.getSavedArticles();
-  }
 
 	getArticles(queryURL){
 		fetch(queryURL)

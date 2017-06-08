@@ -5,7 +5,7 @@ export default props => (
 	<div className="panel-heading" style={{background: 'black'}}>
 		<div className='clearfix'>
       <span className='pull-left'>
-      	<Glyphicon glyph={props.glyph}/>&nbsp;
+      	<Glyphicon style={{color: 'white'}} glyph={props.glyph}/>&nbsp;
       	<a 
       		onClick={props.toggle} 
       		style={{color:'white', textDecoration: 'none', cursor: 'pointer'}}>
