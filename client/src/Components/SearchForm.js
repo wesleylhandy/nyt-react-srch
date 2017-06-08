@@ -12,7 +12,7 @@ export default class SearchForm extends Component {
 			startYear: undefined,
 			endYear: undefined,
 			numRecords: 10,
-			open: true,
+			open: false,
 			currentYear: undefined
 		};
 	}

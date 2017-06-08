@@ -3,7 +3,6 @@ import { Media, Image, Button } from 'react-bootstrap';
 import FlipMove from 'react-flip-move';
 import moment from 'moment';
 
-import MediaCard from './MediaCard';
 import helpers from '../utils/helpers'; 
 
 //client side socket connection
@@ -27,7 +26,7 @@ export default class ResultsListItems extends Component {
 		this.setState({articles: [...nextProps.articles]});
 	}
 
-	toggleSave(article, imgSrc, i){
+	toggleSave(article, imgSrc, index){
 		
 		helpers.saveArticle({title: article.headline.main, url: article.web_url, imgsrc: imgSrc, pubdate: article.pub_date, snippet: article.snippet})
 		.then(response=> {
@@ -36,11 +35,11 @@ export default class ResultsListItems extends Component {
 			//copy articles to new array to change array then update state
 			let revisedArticles = this.state.articles.slice();
 			//add property to this article to notify user that the article was saved
-			revisedArticles[i]['saved'] = true;
+			revisedArticles[index]['saved'] = true;
 			this.setState({articles: [...revisedArticles]});
 			//add a delay before deleting article from results
 			setTimeout(()=>{
-				revisedArticles.splice(i, 1);
+				revisedArticles.splice(index, 1);
 				this.setState({articles: [...revisedArticles]})
 			}, 1000); 
 		}).catch(err=>{
@@ -57,7 +56,7 @@ export default class ResultsListItems extends Component {
 			return (			
 				<FlipMove duration={750} easing='ease-out' maintainContainerHeight={true}>
 					<Media.List>
-						{this.state.articles.map((article, i)=> {
+						{this.state.articles.map((article, index)=> {
 								
 								const multimedia = article.multimedia;
 								const index = multimedia.findIndex(e => e.subtype==='thumbnail');
@@ -69,7 +68,7 @@ export default class ResultsListItems extends Component {
 								}
 
 								return (
-									<Media.ListItem key={i}>
+									<Media.ListItem key={index}>
 										<Media.Left>
 											<a href={article.web_url} target="_blank">
 												<Image src={imgSrc} alt={`Image for ${article.headline.main}`} height={75} width={75}/>
@@ -84,7 +83,7 @@ export default class ResultsListItems extends Component {
 										</Media.Body>
 										<Media.Right>
 
-											<Button bsStyle='primary' onClick={function() {this.toggleSave(article, imgSrc, i)}.bind(this)}>
+											<Button bsStyle='primary' onClick={function() {this.toggleSave(article, imgSrc, index)}.bind(this)}>
 												{saved}
 											</Button>
 	

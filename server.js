@@ -27,7 +27,12 @@ io.on('connection', function(socket){
   console.log('a user connected');
 
   socket.on('save-event', function(article) {
+  	socket.broadcast.emit('new-save', {article});
+  });
+
+  socket.on('delete-event', function(article) {
   	console.log(JSON.stringify(article, null, 2));
+  	socket.broadcast.emit('new-delete', {article});
   });
 
   socket.on('disconnect', function(){
