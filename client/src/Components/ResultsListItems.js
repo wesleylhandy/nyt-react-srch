@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { Image, Media, Button } from 'react-bootstrap';
+import { Media, Image, Button } from 'react-bootstrap';
 import FlipMove from 'react-flip-move';
 import moment from 'moment';
+
+import MediaCard from './MediaCard';
 import helpers from '../utils/helpers'; 
+
+//client side socket connection
+import io from 'socket.io-client'; 
+const socket = io(); 
 
 export default class ResultsListItems extends Component {
 
@@ -22,13 +28,11 @@ export default class ResultsListItems extends Component {
 	}
 
 	toggleSave(article, imgSrc, i){
-		console.log('save button clicked');
 		
 		helpers.saveArticle({title: article.headline.main, url: article.web_url, imgsrc: imgSrc, pubdate: article.pub_date, snippet: article.snippet})
-		.then(article=> {
+		.then(response=> {
 			//good place to emit new saved article message
-			console.log('.then on saveArticle on Component fired');
-			console.log(article);
+			socket.emit('save-event', {article: response.data});
 			//copy articles to new array to change array then update state
 			let revisedArticles = this.state.articles.slice();
 			//add property to this article to notify user that the article was saved
@@ -54,18 +58,16 @@ export default class ResultsListItems extends Component {
 				<FlipMove duration={750} easing='ease-out' maintainContainerHeight={true}>
 					<Media.List>
 						{this.state.articles.map((article, i)=> {
+								
 								const multimedia = article.multimedia;
 								const index = multimedia.findIndex(e => e.subtype==='thumbnail');
-								let imgSrc;
+								let imgSrc = index === -1 ?  'https://placehold.it/75x75?text=No+Image' : `https://www.nytimes.com/${multimedia[index].url}`;
+								
 								let saved = <i className="fa fa-bookmark" aria-hidden="true"></i>;
 								if(article.hasOwnProperty('saved')) {
 									saved = saved ? 'Saved' : <i className="fa fa-bookmark" aria-hidden="true"></i>;
 								}
-								if (index === -1) {
-									imgSrc = 'https://placehold.it/75x75?text=No+Image';
-								} else {
-									imgSrc = `https://www.nytimes.com/${multimedia[index].url}`;
-								}
+
 								return (
 									<Media.ListItem key={i}>
 										<Media.Left>

@@ -13,7 +13,24 @@ function saveArticle(article) {
       }
     });
 	})
-
 }
 
-module.exports = {saveArticle};
+function getSavedArticles() {
+
+	return new Promise((resolve, reject)=> {
+		axios.get('/api/articles').then(response=>{
+			if (response) {
+				resolve(response.data)
+			}
+		}).catch(err=> {
+			if(err) {
+				reject(err.response.data);
+			}
+		});
+	});
+}
+
+module.exports = {
+	saveArticle,
+	getSavedArticles
+};

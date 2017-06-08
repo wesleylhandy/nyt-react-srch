@@ -15,7 +15,8 @@
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
-    "react-flip-move": "^2.9.14"
+    "react-flip-move": "^2.9.14",
+    "socket.io": "^2.0.2"
   },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",

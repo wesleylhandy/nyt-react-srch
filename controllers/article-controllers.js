@@ -5,7 +5,7 @@ const Article = require('./../models/Article');
 
 routes.get("/api/articles", (req, res) => {
     Article.find({}, (err, articles) => {
-        err ? res.status(400).send() : res.json(articles)
+        err ? res.status(400).send(err.message) : res.json(articles)
     });
 });
 

@@ -1,7 +1,13 @@
 var mongoose = require('mongoose');
+
+mongoose.Promise = Promise;
+
 var Schema = mongoose.Schema;
+
 if (mongoose.connection.readyState === 0) {
-  mongoose.connect(require('./connection-string'));
+  mongoose.connect(require('./connection-string'))
+  .then(() => console.log('connected to DB!'))
+  .catch((err) => console.error(err));
 }
 
 

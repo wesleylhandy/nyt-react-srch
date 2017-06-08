@@ -1,10 +1,9 @@
-const express = require('express'),
-bodyParser = require('body-parser'),
-mongoose = require('mongoose');
+const express = require('express');
+const app = express();
+const bodyParser = require('body-parser');
 
 const routes = require('./controllers/article-controllers');
 
-const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
@@ -16,14 +15,22 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
 }
 
-mongoose.Promise = Promise;
-
-const dbUri = process.env.MONGODB_URI || "mongodb://localhost/nytsrch";
-
-mongoose.connect(dbUri).then(() => console.log('connected to DB!')).catch((err) => console.log(err));
-
 app.use('/', routes)
 
-app.listen(app.get('port'), () => {
+const server = app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`); 
+});
+
+const io = require('socket.io')(server);
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.on('save-event', function(article) {
+  	console.log(JSON.stringify(article, null, 2));
+  });
+
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
 });

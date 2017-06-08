@@ -6,7 +6,7 @@
 
 var url = require('url')
 
-var uri = 'mongodb://localhost/nytsearch';
+var uri = process.env.MONGODB_URI || 'mongodb://localhost/nytsearch';
 if (!uri) {
   throw new Error(
     'You need to provide the connection string. ' +

@@ -4,6 +4,11 @@ import Header from './Components/Header';
 import Footer from './Components/Footer';
 import SearchForm from './Components/SearchForm';
 import SearchResults from './Components/SearchResults';
+import FavoritesList from './Components/FavoritesList';
+
+//client side socket connection
+import io from 'socket.io-client'; 
+const socket = io(); 
 
 class App extends Component {
 	constructor(props) {
@@ -12,7 +17,8 @@ class App extends Component {
 			formOpen: true,
 			resultsOpen: false,
 			favoritesOpen: false,
-			articles: []
+			articles: [],
+			favoriteArticles: []
 		}
 	}
 
@@ -24,22 +30,27 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-
         <div className="container">
 
         	<Header/>
 
-	        <SearchForm open={this.state.formOpen} callFetch={this.getArticles.bind(this)}/>
+	        <SearchForm 
+	        	open={this.state.formOpen} 
+	        	callFetch={this.getArticles.bind(this)}
+	        />
 
 	        <SearchResults 
 	        	open={this.state.resultsOpen} 
 	        	articles={this.state.articles} 
 	        />
 
+	        <FavoritesList
+	        	open={this.state.favoritesOpen}
+	        	articles={this.state.favoriteArticles}
+	        />
+
 	      </div>
-
         <Footer/>
-
       </div>
     );
   }
