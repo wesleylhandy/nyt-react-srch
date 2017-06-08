@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Image, Media, Button } from 'react-bootstrap';
 import FlipMove from 'react-flip-move';
 import moment from 'moment';
+import helpers from '../utils/helpers'; 
 
 export default class ResultsListItems extends Component {
 
@@ -22,18 +23,12 @@ export default class ResultsListItems extends Component {
 
 	toggleSave(article, imgSrc, i){
 		console.log('save button clicked');
-		const articleString = JSON.stringify({title: article.headline.main, url: article.web_url, imgsrc: imgSrc, pubdate: article.pub_date, snippet: article.snippet});
 		
-		fetch("http://localhost:3001/api/article", {method: 'POST', mode: 'no-cors', body: articleString})
-		.then(response=>{
-			console.log('save article response received');
-			//handle errors first
-			console.log(response);
-			if(!response.ok) {
-				throw Error(response.statusText);
-			} 
-			else return response.json();
-		}).then(article=> {
+		helpers.saveArticle({title: article.headline.main, url: article.web_url, imgsrc: imgSrc, pubdate: article.pub_date, snippet: article.snippet})
+		.then(article=> {
+			//good place to emit new saved article message
+			console.log('.then on saveArticle on Component fired');
+			console.log(article);
 			//copy articles to new array to change array then update state
 			let revisedArticles = this.state.articles.slice();
 			//add property to this article to notify user that the article was saved
@@ -44,14 +39,19 @@ export default class ResultsListItems extends Component {
 				revisedArticles.splice(i, 1);
 				this.setState({articles: [...revisedArticles]})
 			}, 1000); 
-		}).catch(err=>{if(err)console.error(err)});
+		}).catch(err=>{
+			if(err) {
+				console.error(err);
+				//this is a great place to show an error on screen
+			}
+		});
 	}
 
 	render() {
 
 		if(this.state.articles.length > 0 ) {
 			return (			
-				<FlipMove duration={500} easing='ease-in' maintainContainerHeight={true}>
+				<FlipMove duration={750} easing='ease-out' maintainContainerHeight={true}>
 					<Media.List>
 						{this.state.articles.map((article, i)=> {
 								const multimedia = article.multimedia;

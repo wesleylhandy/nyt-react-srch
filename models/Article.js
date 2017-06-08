@@ -9,12 +9,18 @@ var newSchema = new Schema({
   
   'title': { 
     type: String,
-    validate: [isArticleUnique, 'notUnique'] },
-  'pubdate': { type: String },
-  'imgsrc': { type: String },
-  'url': { type: String },
+    validate: {
+      isAsync: true,
+      validator: isArticleUnique, 
+      message:'Duplicate: This article has already been saved and can be viewed in the Saved Articles Section.' 
+    },
+    required: true
+  },
+  'pubdate': { type: String, required: true },
+  'imgsrc': { type: String, required: true },
+  'url': { type: String, required: true },
   'likes': { type: Number, default: 0 },
-  'snippet': { type: String },
+  'snippet': { type: String, required: true },
   'createdAt': { type: Date, default: Date.now },
   'updatedAt': { type: Date, default: Date.now }
 });
@@ -34,7 +40,7 @@ newSchema.pre('findOneAndUpdate', function() {
 
 function isArticleUnique(value, done) {
   //excluding current id from count
-  mongoose.models['Article'].count({_id: {'$ne': this._id }, title: value, pubdate: this.pubdate}, function(err, count){
+  mongoose.models['Article'].count({_id: {$ne: this._id }, title: value, pubdate: this.pubdate}, function(err, count){
     if(err) {
       return done(err);
     }

@@ -10,22 +10,23 @@ routes.get("/api/articles", (req, res) => {
 });
 
 routes.post("/api/article", (req, res) => {
-    const body = JSON.parse(req.body);
-    console.log (body);
+    const reqObj = req.body.article;
     let article = new Article({
-        title: body.title,
-        url: body.url,
-        pubdate: body.pubdate,
-        imgsrc: body.imgsrc,
-        snippet: body.snippet
+        title: reqObj.title,
+        url: reqObj.url,
+        pubdate: reqObj.pubdate,
+        imgsrc: reqObj.imgsrc,
+        snippet: reqObj.snippet
     });
 
     article.save({runValidators: true})
-        .then(article => res.send(article))
+        .then((article,err) => {
+            console.log(err);
+            res.status(200).send(article)})
         .catch(err=> {
             if (err) {
                 console.error(err.message);
-                let statusCode = err.message.includes('notUnique') ? 404 : 503;
+                let statusCode = err.message.includes('Duplicate') ? 409 : 503;
                 res.status(statusCode).send(err.message);
             }
     });
