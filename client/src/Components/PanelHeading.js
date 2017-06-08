@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Glyphicon} from 'react-bootstrap';
 
 export default props => (
-	<div className="panel-heading" style={{background: 'black'}}>
+	<div className="panel-heading" style={{background: 'black'}} onClick={props.toggle}>
 		<div className='clearfix'>
       <span className='pull-left'>
       	<Glyphicon style={{color: 'white'}} glyph={props.glyph}/>&nbsp;
