@@ -17,20 +17,25 @@ export default class FavoritesListItems extends Component {
 		this.state = {
 			articles: []
 		}
-		this.incrementVotes = this.incrementVotes.bind(this);
+		this.handleClick = this.handleClick.bind(this);
+		this.sortArticles = this.sortArticles.bind(this);
 	}
 
 	componentWillMount() {
-		this.setState({articles: [...this.props.articles]})
+		const sortedArticles = this.props.articles.slice()
+		sortedArticles.sort(this.sortArticles);
+		this.setState({articles: [...sortedArticles]})
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({articles: [...nextProps.articles]});
+		const sortedArticles = nextProps.articles.slice()
+		sortedArticles.sort(this.sortArticles);
+		this.setState({articles: [...sortedArticles]})
 	}
 
 	toggleDelete(_id, index){
 		
-		helpers.removeArticle({_id})
+		helpers.removeArticle(_id)
 		.then(response=> {
 			//good place to emit new saved article message
 			socket.emit('delete-event', {article: response.data});
@@ -52,24 +57,29 @@ export default class FavoritesListItems extends Component {
 		});
 	}
 
-	incrementVotes(_id, count){
-		helpers.incrementVotes({_id, count})
+	sortArticles(a, b) {
+		return a.likes < b.likes;
+	}
+
+	handleClick(e){
+		const _id = e.target.attributes.name.value;
+		const count = e.target.attributes.value.value;
+		helpers.incrementVotes(_id, count)
 		.then(response => {
-			console.log(response.data);
+			//copy state to update attribute of one element
+			let revisedArticles = this.state.articles.slice();
+			//update likes on returned object
+			revisedArticles[revisedArticles.findIndex(e=> e._id === _id)].likes = response.doc.likes;
+
+			revisedArticles.sort(this.sortArticles);
+			//set new state
+			this.setState({articles: [...revisedArticles]});
 		}).catch(err=>{
 			if(err) {
 				console.error(err);
 				//this is a great place to show an error on screen
 			}
 		});
-	}
-
-	upVote(_id) {
-		this.incrementVotes(_id, 1);
-	}
-
-	downVote(_id) {
-		this.incrementVotes(_id, -1);
 	}
 
 	render() {
@@ -103,14 +113,14 @@ export default class FavoritesListItems extends Component {
 
 												<div className='button-list--left'>											
 												
-													<Button  bsStyle='default' bsSize='xsmall' onClick={()=>this.upVote(article._id).bind(this)}>
-														<i className="fa fa-chevron-up"></i>
+													<Button  bsStyle='default' bsSize='xsmall' onClick={this.handleClick}>
+														<i className="fa fa-chevron-up" value={1} name={article._id}></i>
 													</Button>
 
 													<Badge className='button-list__button--middle'>{article.likes}</Badge>
 
-													<Button bsStyle='default' bsSize='xsmall' onClick={()=>this.downVote(article._id).bind(this)}>
-															<i className="fa fa-chevron-down"></i>
+													<Button bsStyle='default' bsSize='xsmall' onClick={this.handleClick}>
+															<i className="fa fa-chevron-down" value={-1} name={article._id}></i>
 													</Button>
 												</div>
 

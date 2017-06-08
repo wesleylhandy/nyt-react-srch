@@ -1,6 +1,5 @@
 import React from 'react';
 import { Media, Image } from 'react-bootstrap';
-import moment from 'moment';
 
 export default props => {
 	if(props.article.title) {

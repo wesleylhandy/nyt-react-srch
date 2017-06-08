@@ -1,6 +1,5 @@
 const routes = require('express').Router();
 
-const { ObjectID } = require('mongodb');
 const Article = require('./../models/Article');
 
 routes.get("/api/articles", (req, res) => {
@@ -32,44 +31,21 @@ routes.post("/api/article", (req, res) => {
     });
 });
 
-routes.delete("/api/articles/:id", (req, res) => {
+routes.delete("/api/article/:id", (req, res) => {
     let articleId = req.params.id;
 
-    if(!ObjectID.isValid(articleId)) {
-        return res.status(404).send();
-    };
-
-    Article.findByIdAndRemove(articleId).then((article) => {
-        if(!article) {
-           return res.status(404).send();
-        }
-        res.send({article});
-    }).catch((e) => {
-       return res.status(400).send(e);
-    })
+    Article.findOneAndRemove({_id: articleId}, (err, doc) => {
+       err ? res.status(404).send(err) : res.send({doc}) 
+    });
 });
 
-routes.patch('/api/articles/:action/:id', (req, res) => {
-    let action = req.params.action;
+routes.put('/api/article/:id/:count', (req, res) => {
+    let count = parseInt(req.params.count);
     let articleId = req.params.id;
 
-    if(!ObjectID.isValid(articleId)) {
-        return res.status(404).send();
-    };
-
-    if(action === "like") {
-        Article.findByIdAndUpdate(articleId, {$inc: {likes: 1}}).then((article) => {
-            !article ? res.status(404).send() : res.send({article})
-        }).catch(e => {
-            res.status(400).send(e);
-        })
-    } else if(action === "dislike") {
-        Article.findByIdAndUpdate(articleId, {$inc: {likes: -1}}).then((article) => {
-            !article ? res.status(404).send() : res.send({article})
-        }).catch(e => {
-            res.status(400).send(e);
-        })
-    }
+    Article.findOneAndUpdate({_id: articleId}, {$inc: {likes: count}}, {new: true}, (err, doc)=> {
+        err ? res.status(404).send(err) : res.send({doc})
+    });
 
 })
 
