@@ -59,8 +59,8 @@ export default class ResultsListItems extends Component {
 						{this.state.articles.map((article, index)=> {
 								
 								const multimedia = article.multimedia;
-								const index = multimedia.findIndex(e => e.subtype==='thumbnail');
-								let imgSrc = index === -1 ?  'https://placehold.it/75x75?text=No+Image' : `https://www.nytimes.com/${multimedia[index].url}`;
+								const srcIndex = multimedia.findIndex(e => e.subtype==='thumbnail');
+								let imgSrc = srcIndex === -1 ?  'https://placehold.it/75x75?text=No+Image' : `https://www.nytimes.com/${multimedia[srcIndex].url}`;
 								
 								let saved = <i className="fa fa-bookmark" aria-hidden="true"></i>;
 								if(article.hasOwnProperty('saved')) {

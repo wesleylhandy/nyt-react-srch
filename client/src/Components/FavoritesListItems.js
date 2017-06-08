@@ -79,7 +79,7 @@ export default class FavoritesListItems extends Component {
 										<Media.Right>
 
 											<Button bsStyle='primary' onClick={function() {this.toggleDelete(article._id, index)}.bind(this)}>
-												{deletec}
+												{deleted}
 											</Button>
 	
 										</Media.Right>

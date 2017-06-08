@@ -6,7 +6,7 @@ import SearchForm from './Components/SearchForm';
 import SearchResults from './Components/SearchResults';
 import FavoritesList from './Components/FavoritesList';
 
-import helpers from '../utils/helpers'; 
+import helpers from './utils/helpers'; 
 
 //client side socket connection
 import io from 'socket.io-client'; 
@@ -23,7 +23,8 @@ class App extends Component {
 			favoriteArticles: [],
 			newArticle: {}
 		}
-		socket.on('new-save', payload => this.updateSavedArticles(article));
+		socket.on('new-save', payload => this.updateSavedArticles(payload));
+		this.getSavedArticles = this.getSavedArticles.bind(this);
 	}
 
 	componentWillMount() {
@@ -32,8 +33,9 @@ class App extends Component {
 
 	getSavedArticles() {
 		helpers.getSavedArticles()
-    .then(response => this.setState({favoriteArticles: [...response.data], favoritesOpen: true}))
-    .catch(err=>{
+    .then(response => {
+    	this.setState({favoriteArticles: [...response], favoritesOpen: true})
+    }).catch(err=>{
 			if(err) {
 				console.error(err);
 				//this is a great place to show an error on screen
