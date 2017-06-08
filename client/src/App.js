@@ -5,6 +5,7 @@ import Footer from './Components/Footer';
 import SearchForm from './Components/SearchForm';
 import SearchResults from './Components/SearchResults';
 import FavoritesList from './Components/FavoritesList';
+import NotificationTab from './Components/NotificationTab';
 
 import helpers from './utils/helpers'; 
 
@@ -55,6 +56,8 @@ class App extends Component {
         <div className="container">
 
         	<Header/>
+
+        	<NotificationTab/>
 
 	        <SearchForm 
 	        	open={this.state.formOpen} 

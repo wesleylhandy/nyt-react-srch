@@ -96,7 +96,7 @@ export default class FavoritesListItems extends Component {
 												<a href={article.url} target='_blank'>{article.title}</a>
 											</Media.Heading>
 											<p>{article.snippet}</p>
-											<p>{moment(article.pub_date).format('LLLL')}</p>
+											<p>{moment(article.pubdate).format('LLLL')}</p>
 										</Media.Body>
 										<Media.Right>
 											<div className='button-list'>
