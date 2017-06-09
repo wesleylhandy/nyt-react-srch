@@ -26,7 +26,7 @@ var newSchema = new Schema({
   'imgsrc': { type: String, required: true },
   'url': { type: String, required: true },
   'likes': { type: Number, default: 0 },
-  'snippet': { type: String, required: true },
+  'snippet': { type: String, default: '' },
   'createdAt': { type: Date, default: Date.now },
   'updatedAt': { type: Date, default: Date.now }
 });

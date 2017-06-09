@@ -17,21 +17,19 @@ export default class FavoritesListItems extends Component {
 		this.state = {
 			articles: []
 		}
-		this.handleClick = this.handleClick.bind(this);
-		this.sortArticles = this.sortArticles.bind(this);
 		
-		socket.on('new-delete', () => {
-			console.log("delete event registered");
-			this.refreshSavedArticles()
-		});
+		socket.on('new-delete', () => this.refreshSavedArticles());
+
+		socket.on('new-vote', () => this.refreshSavedArticles());
 
 		this.refreshSavedArticles = this.refreshSavedArticles.bind(this);
+		this.sortArticles = this.sortArticles.bind(this);
 	}
 
 	refreshSavedArticles() {
 		helpers.getSavedArticles()
     .then(response => {
-    	this.setState({articles: [...response]})
+    	this.setState({articles: [...this.sortArticles(response)]})
     }).catch(err=>{
 			if(err) {
 				console.error(err);
@@ -41,15 +39,11 @@ export default class FavoritesListItems extends Component {
 	}
 
 	componentWillMount() {
-		const sortedArticles = this.props.articles.slice()
-		sortedArticles.sort(this.sortArticles);
-		this.setState({articles: [...sortedArticles]})
+		this.setState({articles: [...this.sortArticles(this.props.articles)]})
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const sortedArticles = nextProps.articles.slice()
-		sortedArticles.sort(this.sortArticles);
-		this.setState({articles: [...sortedArticles]})
+		this.setState({articles: [...this.sortArticles(nextProps.articles)]})
 	}
 
 	toggleDelete(_id, index) {
@@ -75,23 +69,22 @@ export default class FavoritesListItems extends Component {
 		});
 	}
 
-	sortArticles(a, b) {
-		return a.likes < b.likes;
+	sortArticles(articles) {
+		return articles.sort((a, b)=> a.likes < b.likes);
 	}
 
-	handleClick(e){
-		const _id = e.target.attributes.name.value;
-		const count = e.target.attributes.value.value;
+	handleClick(count, _id){
+		// const _id = e.target.parentNode.attributes.name.value;
+		// const count = e.target.parentNode.attributes.value.value;
 		helpers.incrementVotes(_id, count)
 		.then(response => {
+			socket.emit('vote-event', {_id, count});
 			//copy state to update attribute of one element
 			let revisedArticles = this.state.articles.slice();
 			//update likes on returned object
 			revisedArticles[revisedArticles.findIndex(e=> e._id === _id)].likes = response.doc.likes;
-
-			revisedArticles.sort(this.sortArticles);
 			//set new state
-			this.setState({articles: [...revisedArticles]});
+			this.setState({articles: [...this.sortArticles(revisedArticles)]});
 		}).catch(err=>{
 			if(err) {
 				console.error(err);
@@ -131,14 +124,14 @@ export default class FavoritesListItems extends Component {
 
 												<div className='button-list--left'>											
 												
-													<Button  bsStyle='default' bsSize='xsmall' onClick={this.handleClick}>
-														<i className="fa fa-chevron-up" value={1} name={article._id}></i>
+													<Button  bsStyle='default' bsSize='xsmall' onClick={function() {this.handleClick(1, article._id)}.bind(this)}>
+														<i className="fa fa-chevron-up"></i>
 													</Button>
 
 													<Badge className='button-list__button--middle'>{article.likes}</Badge>
 
-													<Button bsStyle='default' bsSize='xsmall' onClick={this.handleClick}>
-															<i className="fa fa-chevron-down" value={-1} name={article._id}></i>
+													<Button bsStyle='default' bsSize='xsmall' onClick={function() {this.handleClick(-1, article._id)}.bind(this)}>
+															<i className="fa fa-chevron-down"></i>
 													</Button>
 												</div>
 

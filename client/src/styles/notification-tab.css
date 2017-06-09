@@ -1,15 +1,49 @@
 .notification-tab {
 	background: white;
+	border-bottom: 1px solid black;
+	border-bottom-left-radius: 10px;
+	border-left: 1px solid black;
+	border-top: 1px solid black;
+	border-top-left-radius: 10px;
+	box-shadow: -2px 0px 5px black;
+	height: 90px;
+	padding: 7.5px;
 	position: fixed;
 	right: 0;
 	top: 5%;
-	border-top-left-radius: 10px;
-	border-bottom-left-radius: 10px;
-	border-bottom: 1px solid black;
-	border-top: 1px solid black;
-	border-left: 1px solid black;
-	height: 90px;
-	padding: 7.5px;
-	box-shadow: -2px 0px 5px black;
 	z-index: 99;
+}
+
+.notification-tab--truncate {
+	overflow-y: hidden;
+}
+
+@media screen and (max-width: 700px) {
+
+	.notification-tab {
+		height: 100px;
+	}
+}
+
+@media screen and (max-width: 583px) {
+
+	.notification-tab {
+		height: 150px;
+	}
+}
+
+@media screen and (max-width: 450px) {
+
+	.notification-tab {
+		height: 200px;
+	}
+
+}
+
+@media screen and (max-width: 374px) {
+
+	.notification-tab {
+		height: 250px;
+	}
+
 }

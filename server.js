@@ -26,14 +26,23 @@ const io = require('socket.io')(server);
 io.on('connection', function(socket){
   console.log('a user connected');
 
+  //notify all but caller of new save
   socket.on('save-event', function(article) {
+    console.log('Save called');
   	socket.broadcast.emit('new-save', {article});
   });
 
+  //notify all but caller of delete
   socket.on('remove-event', function(article) {
     console.log('Remove called');
-  	socket.broadcast.emit('new-delete', {deleted: true});
+  	socket.broadcast.emit('new-delete', {article});
   });
+
+  //notify all but caller of new vote
+  socket.on('vote-event', function(article) {
+    console.log('Vote called');
+    socket.broadcast.emit('new-vote', {article});
+  })
 
   socket.on('disconnect', function(){
     console.log('user disconnected');

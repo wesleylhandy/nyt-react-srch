@@ -1,6 +1,8 @@
 import React from 'react';
 import { Media, Image } from 'react-bootstrap';
 
+import '../styles/notification-tab.css';
+
 export default props => {
 	if(props.article.title) {
 		return (
@@ -12,9 +14,9 @@ export default props => {
 				</Media.Left>
 				<Media.Body>
 					<Media.Heading>
-						<p>New Article Recently Added</p>
+						<p>New Article Recently Saved</p>
 					</Media.Heading>
-						<a href={props.article.url} target='_blank'>{props.article.title}</a>
+						<a href={props.article.url} target='_blank' className='notification-tab--truncate'>{props.article.title}</a>
 				</Media.Body>
 			</Media>
 		)

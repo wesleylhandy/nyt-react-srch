@@ -15,7 +15,7 @@ export default class NotificationTab extends Component {
 			newArticle: {}
 		}
 		socket.on('new-save', payload => this.updateSavedArticles(payload));
-		this.toggleExpand = this.toggleExpand.bind(this);
+		
 	}
 
 	updateSavedArticles(payload) {
@@ -23,8 +23,14 @@ export default class NotificationTab extends Component {
     setTimeout(this.toggleExpand, 2500);
   }
 
-  toggleExpand() {
-  	this.setState({tabExpanded: !this.state.tabExpanded});
+  //since update function will open tab, 
+  //move away from a toggle function to prevent tab being stuck in open position
+  handleMouseEnter() {
+  	this.setState({tabExpanded: true});
+  }
+
+  handleMouseLeave() {
+    this.setState({tabExpanded: false});
   }
 
   render() {
@@ -33,8 +39,8 @@ export default class NotificationTab extends Component {
   		<div 
   			className='notification-tab' 
   			style={{width: `${expanse}%`}} 
-  			onMouseEnter={this.toggleExpand}
-  			onMouseLeave={this.toggleExpand}
+  			onMouseEnter={this.handleMouseEnter.bind(this)}
+  			onMouseLeave={this.handleMouseLeave.bind(this)}
   		>
   			<MediaCard article={this.state.newArticle}/>
   		</div>
