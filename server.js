@@ -30,9 +30,9 @@ io.on('connection', function(socket){
   	socket.broadcast.emit('new-save', {article});
   });
 
-  socket.on('delete-event', function(article) {
-  	console.log(JSON.stringify(article, null, 2));
-  	socket.broadcast.emit('new-delete', {article});
+  socket.on('remove-event', function(article) {
+    console.log('Remove called');
+  	socket.broadcast.emit('new-delete', {deleted: true});
   });
 
   socket.on('disconnect', function(){

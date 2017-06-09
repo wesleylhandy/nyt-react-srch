@@ -48,7 +48,6 @@ function incrementVotes(_id, count) {
 	return new Promise((resolve, reject) => {
 		axios.put(`/api/article/${_id}/${count}`).then(response=>{
 			if (response) {
-				console.log(response);
 				resolve(response.data)
 			}
 		}).catch(err=> {

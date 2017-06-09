@@ -54,8 +54,9 @@ export default class ResultsListItems extends Component {
 
 		if(this.state.articles.length > 0 ) {
 			return (			
-				<FlipMove duration={750} easing='ease-out' maintainContainerHeight={true}>
-					<Media.List>
+				<Media.List>
+					<FlipMove duration={1500} easing='ease-in-out' maintainContainerHeight={true}>
+					
 						{this.state.articles.map((article, index)=> {
 								
 								const multimedia = article.multimedia;
@@ -93,8 +94,9 @@ export default class ResultsListItems extends Component {
 								)
 							})
 						}
-					</Media.List>
-				</FlipMove>
+					</FlipMove>
+				</Media.List>
+				
 			);
 
 		} else {

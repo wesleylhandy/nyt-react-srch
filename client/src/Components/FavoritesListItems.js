@@ -19,6 +19,25 @@ export default class FavoritesListItems extends Component {
 		}
 		this.handleClick = this.handleClick.bind(this);
 		this.sortArticles = this.sortArticles.bind(this);
+		
+		socket.on('new-delete', () => {
+			console.log("delete event registered");
+			this.refreshSavedArticles()
+		});
+
+		this.refreshSavedArticles = this.refreshSavedArticles.bind(this);
+	}
+
+	refreshSavedArticles() {
+		helpers.getSavedArticles()
+    .then(response => {
+    	this.setState({articles: [...response]})
+    }).catch(err=>{
+			if(err) {
+				console.error(err);
+				//this is a great place to show an error on screen
+			}
+		});
 	}
 
 	componentWillMount() {
@@ -33,22 +52,21 @@ export default class FavoritesListItems extends Component {
 		this.setState({articles: [...sortedArticles]})
 	}
 
-	toggleDelete(_id, index){
+	toggleDelete(_id, index) {
 		
 		helpers.removeArticle(_id)
 		.then(response=> {
-			//good place to emit new saved article message
-			socket.emit('delete-event', {article: response.data});
+			socket.emit('remove-event', {deleted: true})
 			//copy articles to new array to change array then update state
 			let revisedArticles = this.state.articles.slice();
 			//add property to this article to notify user that the article was saved
 			revisedArticles[index]['deleted'] = true;
+
 			this.setState({articles: [...revisedArticles]});
-			//add a delay before deleting article from results
-			setTimeout(()=>{
-				revisedArticles.splice(index, 1);
-				this.setState({articles: [...revisedArticles]})
-			}, 1000); 
+			
+			revisedArticles.splice(index, 1);
+			setTimeout(()=>this.setState({articles: [...revisedArticles]}), 1000);
+
 		}).catch(err=>{
 			if(err) {
 				console.error(err);
@@ -84,9 +102,9 @@ export default class FavoritesListItems extends Component {
 
 	render() {
 		if(this.state.articles.length > 0 ) {
-			return (			
-				<FlipMove duration={750} easing='ease-out' maintainContainerHeight={true}>
-					<Media.List>
+			return (
+				<Media.List>			
+					<FlipMove duration={1500} easing='ease-in-out' maintainContainerHeight={true}>
 						{this.state.articles.map((article, index) => {
 								
 								let deleted = <i className="fa fa-times" aria-hidden="true"></i>;
@@ -139,8 +157,9 @@ export default class FavoritesListItems extends Component {
 								)
 							})
 						}
-					</Media.List>
-				</FlipMove>
+					</FlipMove>
+				</Media.List>
+				
 			);
 
 		} else {
