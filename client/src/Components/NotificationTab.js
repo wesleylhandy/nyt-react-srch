@@ -20,7 +20,7 @@ export default class NotificationTab extends Component {
 
 	updateSavedArticles(payload) {
     this.setState({newArticle: payload.article.article, tabExpanded: true});
-    setTimeout(this.toggleExpand, 2500);
+    setTimeout(() => this.setState({tabExpanded: false}), 2500);
   }
 
   //since update function will open tab, 
