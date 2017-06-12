@@ -12,4 +12,4 @@ Data is stored and served from a connection to MongoDB, via `Mongoose` and the a
 * The Front End utilizes the `Fetch API`
 * The main communication between front and back end is via `axios`.
 
-#### Try opening multiple windows of the app to see the nofication system at work -> https://nyt-srch.herokuapp.com/
+#### Try opening multiple windows of the app to see the notification system at work -> https://nyt-srch.herokuapp.com/

@@ -65,7 +65,7 @@ export default class ResultsListItems extends Component {
 								
 								let saved = <i className="fa fa-bookmark" aria-hidden="true"></i>;
 								if(article.hasOwnProperty('saved')) {
-									saved = saved ? 'Saved' : <i className="fa fa-bookmark" aria-hidden="true"></i>;
+									saved = article.saved ? 'Saved' : <i className="fa fa-bookmark" aria-hidden="true"></i>;
 								}
 
 								return (

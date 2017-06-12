@@ -70,7 +70,7 @@ export default class FavoritesListItems extends Component {
 	}
 
 	sortArticles(articles) {
-		return articles.sort((a, b)=> a.likes < b.likes);
+		return articles.sort((a, b)=> a.likes < b.likes ? 1 : -1);
 	}
 
 	handleClick(count, _id){
@@ -102,7 +102,7 @@ export default class FavoritesListItems extends Component {
 								
 								let deleted = <i className="fa fa-times" aria-hidden="true"></i>;
 								if(article.hasOwnProperty('deleted')) {
-									deleted = deleted ? 'Deleted' : <i className="fa fa-times" aria-hidden="true"></i>;
+									deleted = article.deleted ? 'Deleted' : <i className="fa fa-times" aria-hidden="true"></i>;
 								}
 
 								return (
